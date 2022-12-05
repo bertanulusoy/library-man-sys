@@ -130,3 +130,7 @@ dmypy.json
 
 # PyCharm file
 .idea
+
+# Data
+library_data/data
+library_data/datapackage.json
