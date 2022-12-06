@@ -1,0 +1,42 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: library
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - .:/library_data/data
+      #- library_data:/data/db:rw
+
+  # Mongo Express Service
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+
+  app:
+    container_name: app
+    build: .
+    command: bash -c "alembic upgrade head & uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - ./app
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      - mongo
+
+  redis:
+    container_name: redis
+    image: redis:latest
