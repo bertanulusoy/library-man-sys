@@ -12,6 +12,9 @@ class Book(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+    class Config:
+        orm_mode = True
+
 
 class Borrower(BaseModel):
     borrow_id: int
@@ -20,6 +23,9 @@ class Borrower(BaseModel):
     address: str
     created_at: datetime
     updated_at: datetime
+
+    class Config:
+        orm_mode = True
 
 
 class Transaction(BaseModel):
@@ -30,6 +36,9 @@ class Transaction(BaseModel):
     due_date_returned: datetime
     created_at: datetime
     updated_at: datetime
+
+    class Config:
+        orm_mode = True
 
 
 
