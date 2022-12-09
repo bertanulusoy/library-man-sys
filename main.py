@@ -4,15 +4,6 @@ from database import *
 
 app = FastAPI()
 
-origins = ["http://localhost:3000"]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_method=["*"],
-    allow_headers=["*"],
-)
-
 
 @app.get("/")
 async def root():
@@ -60,4 +51,3 @@ async def delete_book_by_id(book_id: int):
 @app.put("/api/books{book_id}")
 async def borrow_book_by_id(book_id: int, user_data):
     return f"Borrow a book with the book id.{book_id}"
-

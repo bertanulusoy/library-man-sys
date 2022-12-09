@@ -17,12 +17,14 @@ class Book(BaseModel):
 
 
 class Borrower(BaseModel):
-    borrow_id: int
-    full_name: str
+    borrower_id: int
+    fullname: str
     gender: str
     address: str
+    vio_count: int
     created_at: datetime
     updated_at: datetime
+    resetmonth: int
 
     class Config:
         orm_mode = True
@@ -32,8 +34,10 @@ class Transaction(BaseModel):
     transaction_id: int
     book_id: int
     borrower_id: int
-    date_borrowed: datetime
-    due_date_returned: datetime
+    dateborrowed: datetime
+    duedatereturned: datetime
+    fullname: str
+    booktitle: str
     created_at: datetime
     updated_at: datetime
 
