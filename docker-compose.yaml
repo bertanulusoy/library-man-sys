@@ -1,42 +1,101 @@
 services:
   mongo:
     image: mongo:latest
-    container_name: mongodb
+    container_name: mongo-dev
     restart: always
+    environment:
+      MONGO_INITDB_DATABASE: Library
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
     ports:
       - 27017:27017
-    environment:
-      MONGO_INITDB_DATABASE: library
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - .:/library_data/data
       #- library_data:/data/db:rw
+    networks:
+      - airflow
 
   # Mongo Express Service
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
     restart: always
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_URL: "mongodb://root:root@mongo:27017/"
+      # ME_CONFIG_MONGODB_URL: "mongodb://admin:admin@mongo:27017/Library"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGO_DB_SERVER: mongo
     ports:
       - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: password
-      ME_CONFIG_MONGODB_SERVER: mongodb
+    networks:
+      - airflow
+
 
   app:
     container_name: app
     build: .
-    command: bash -c "alembic upgrade head & uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload" # alembic upgrade head &
     volumes:
-      - ./app
+      - .:/app
     ports:
       - 8000:8000
     restart: always
     depends_on:
       - mongo
+    networks:
+      - airflow
 
-  redis:
-    container_name: redis
-    image: redis:latest
+  #redis:
+  #  container_name: redis
+  #  image: redis:latest
+
+  # redis:
+  #  container_name: redis
+  #  image: redis:latest
+  #  expose:
+  #    - 6379
+  #  healthcheck:
+  #    test: [ "CMD", "redis-cli", "ping" ]
+  #    interval: 5s
+  #    timeout: 30s
+  #    retries: 50
+  #  restart: always
+
+  # celery_worker:
+  #  container_name: celery_worker
+  #  build: .
+  #  command: celery -A celery_worker.celery worker --loglevel=info
+  #  volumes:
+  #    - . :/app
+  #  environment:
+  #    - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+  #    - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+  #  depends_on:
+  #    - app
+  #    - redis
+
+  #flower:
+  #  container_name:  flower
+  #  build: .
+  #  command: celery -A celery_worker.celery flower --port=5555
+  #  ports:
+  #    - 5556:5555
+  #  environment:
+  #    - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+  #    - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+  #  depends_on:
+  #    - app
+  #    - redis
+  #    - celery_worker
+
+networks:
+  airflow:
+    external:
+      name: airflow_default
