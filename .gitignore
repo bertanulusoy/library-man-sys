@@ -132,5 +132,5 @@ dmypy.json
 .idea
 
 # Data
-library_data/data
-library_data/datapackage.json
+airflow/library_data/data
+airflow/library_data/datapackage.json
