@@ -134,3 +134,5 @@ dmypy.json
 # Data
 airflow/library_data/data
 airflow/library_data/datapackage.json
+
+.DS_Store
