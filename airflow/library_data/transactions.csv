@@ -1,0 +1,6 @@
+transac_id,book_id,borrower_id,dateborrowed,duedatereturned,fullname,booktitle,created_at,updated_at
+2,2,1,2022-03-30T04:51:48,2022-03-31T04:51:48,Tyra Zboncak,quis,2022-03-30T04:51:48,2022-03-30T04:51:48
+3,3,1,2022-03-30T04:51:54,2022-03-31T04:51:54,Tyra Zboncak,ipsa,2022-03-30T04:51:54,2022-03-30T04:51:54
+5,5,1,2022-03-14T04:52:10,2022-03-16T04:52:10,Tyra Zboncak,quos,2022-03-30T04:52:10,2022-03-30T04:52:10
+6,6,3,2022-03-15T04:52:19,2022-03-17T04:52:19,Dr. Marcella Gleason Jr.,officiis,2022-03-30T04:52:19,2022-03-30T04:52:19
+7,1,1,2022-03-30T05:00:06,2022-04-06T05:00:06,Tyra Zboncak,consequuntur,2022-03-30T05:00:06,2022-03-30T05:00:06
